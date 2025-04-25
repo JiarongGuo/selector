@@ -1,12 +1,14 @@
 import datetime as dt
-import os.path
 import random as rd
-import sys
 import tkinter as tk
 import tkinter.messagebox as tkms
 
+# debug flag
+#################################### WARNING: TURN IT INTO FALSE WHEN VERSION END!! ####################################
+_DEBUG_ = False
+
 # constant
-VER = (1, 0, 2, 3)
+VER = (1, 0, 4, 6)
 seed: int
 
 # window
@@ -24,6 +26,10 @@ def bsc():
     except (AssertionError, ValueError):
         tkms.showerror('错误', '请输入正整数')
         return
+    s = dt.datetime.now().timestamp()
+    if _DEBUG_:
+        tkms.showinfo('DEBUG', 'seed: '+str(s))
+    rd.seed(s)
     r = rd.randint(1, n)
     lrv.set('结果为：' + str(r))
 
@@ -49,18 +55,4 @@ bc.pack()
 
 # main
 if __name__ == '__main__':
-    try:
-        if not os.path.exists(r'seed'):
-            open(r"seed", 'w').close()
-        with open(r"seed", 'r') as f:
-            try:
-                seed = eval(f.read())
-            except SyntaxError:
-                seed = 166
-    except PermissionError:
-        tkms.showerror('错误', '权限不足')
-        sys.exit()
-    rd.seed(seed)
     tk.mainloop()
-    with open(r"seed", 'w') as f:
-        f.write(str(rd.randint(1, 65535)))
